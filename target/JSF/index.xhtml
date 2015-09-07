@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+<h:head>
+    <title>JavaEE</title>
+    <h:outputStylesheet library="style" name="index.css"  />
+</h:head>
+
+    <h:body>
+        <div id="wrapper">
+
+            <div class="image">
+                <h:graphicImage library="images" name="JavaDuke.png" />
+            </div>
+
+            <div class="login_div">
+               <span>#{msg.input_info}</span>
+
+                <h:form styleClass="login_form">
+                    <h:inputText id="user" value="#{user.name}" required="true" requiredMessage="#{msg.login_required}">
+                        <f:validator validatorId="ru.company.validator.LoginValidator"/>
+                    </h:inputText>
+                    <h:commandButton action="view/main.xhtml?faces-redirect=true" value="Войти"/>
+                    <p><h:message for="user" styleClass="error"/></p>
+                </h:form>
+            </div>
+
+            <div class="footer">
+                #{msg.author_info}
+            </div>
+
+        </div>
+    </h:body>
+
+</html>
