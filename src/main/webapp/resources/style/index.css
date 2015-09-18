@@ -7,28 +7,29 @@ body {
     margin: 100px;
 }
 
-#wrapper {
-    position: absolute;
-    top: 70px;
-    right: 0;
-    bottom: 100px;
-    left: 0;
-    text-align: center;
-    width: 960px;
-    margin: auto;
-}
+/*#wrapper {*/
+    /*position: absolute;*/
+    /*top: 70px;*/
+    /*right: 0;*/
+    /*bottom: 100px;*/
+    /*left: 0;*/
+    /*text-align: center;*/
+    /*width: 960px;*/
+    /*margin: auto;*/
+/*}*/
 
 .image{
     float: left;
     padding: 10px;
 }
 
-.login_div{
-    float: left;
+.login_form {
     width: 400px;
-    border: 1px solid red;
+    height: 120px;
+    border: 1px solid blue;
     padding: 10px;
-
+    margin: auto;
+    background: white;
     text-align: center;
 }
 
@@ -39,24 +40,16 @@ body {
     font-weight: bold;
 }
 
-
-.login_form{
-    text-align: center;
-    padding: 20px;
-}
-
-.error{
+.error {
     color: red;
     font-style: italic;
     font-size: 12px;
 }
 
-.footer{
+.footer {
     color: #000;
     height: 50px;
     text-align: center;
     margin: 50px;
     clear: both;
 }
-
-

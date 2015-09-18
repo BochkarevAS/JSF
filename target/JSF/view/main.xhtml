@@ -4,12 +4,122 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://java.sun.com/jsf/facelets">
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <ui:composition template="/templates/main_template.xhtml">
 
         <ui:define name="content">
-            #{param.genre_id}
+
+            <p id="book_count">
+                <h:outputText value="#{msg.book_count} #{searchController.totalBooksCount}" id="booksCount" />
+            </p>
+
+            <h:form id="booksForm">
+
+                <h:panelGroup id ="admin_tools" rendered="#{request.isUserInRole('admin')}">
+
+                    <h:commandLink action="#{searchController.showEdit}" rendered="#{!searchController.editMode}">
+                        <h:outputText value="#{msg.edit}" />
+                        <f:ajax execute="@form" render="@form" />
+                    </h:commandLink>
+
+                    <h:commandButton action="#{searchController.updateBooks}" rendered="#{searchController.editMode}" value="#{msg.save}">
+                        <f:ajax execute="@form" render="@form" />
+                    </h:commandButton>
+
+                    <h:commandButton immediate="true" action="#{searchController.cancelEdit}" rendered="#{searchController.editMode}" value="#{msg.cancel}">
+                        <f:ajax execute="@form" render="@form" />
+                    </h:commandButton>
+
+                </h:panelGroup>
+
+                <h:dataTable id="booksList" value="#{searchController.currentBookList}" var="book" cellspacing="10px" columnClasses="col1, col2, col3">
+
+                    <h:column><h:graphicImage value="/ImageServlet?id=#{book.id}" width="120" height="160" /></h:column>
+
+                    <h:column>
+                        <p>
+                            <a href="#">#{book.name}</a>
+                        </p>
+
+                        <p>
+                            <strong>#{msg.author_name}: </strong>
+                            <h:outputText value="#{book.author}" rendered="#{!searchController.editMode}" />
+                            <h:inputText value="#{book.author}" rendered="#{searchController.editMode}" />
+                        </p>
+
+                        <p>
+                            <strong>#{msg.page_count}: </strong>
+                            <h:outputText value="#{book.pageCount}" rendered="#{!searchController.editMode}" />
+                            <h:inputText value="#{book.pageCount}" rendered="#{searchController.editMode}" />
+                        </p>
+
+                        <p>
+                            <strong>#{msg.publisher}: </strong>
+                            <h:outputText value="#{book.publisher}" rendered="#{!searchController.editMode}" />
+                            <h:inputText value="#{book.publisher}" rendered="#{searchController.editMode}" />
+                        </p>
+
+                        <p>
+                            <strong>#{msg.publish_year}: </strong>
+                            <h:outputText value="#{book.publishDate} г." rendered="#{!searchController.editMode}" />
+                            <h:inputText value="#{book.publishDate}" rendered="#{searchController.editMode}" />
+                        </p>
+
+                        <p>
+                            <strong>
+                                <h:outputLink styleClass="content_link" value="#{request.contextPath}/PdfContentServlet" target="_blank">
+                                    <h:outputText value="#{msg.read}" />
+                                    <f:param name="id" value="#{book.id}" />
+                                </h:outputLink>
+
+                                <h:outputLink  styleClass="save_link" value="#{request.contextPath}/PdfContentServlet" target="_blank">
+                                    <h:outputText value="#{msg.save}" />
+                                    <f:param name="id" value="#{book.id}" />
+                                    <f:param name="filename" value="#{book.name}" />
+                                    <f:param name="save" value="true" />
+                                </h:outputLink>
+                            </strong>
+                        </p>
+                    </h:column>
+
+                    <h:column>
+                        <p>
+                            <strong>#{msg.descr}</strong>
+                        </p>
+
+                        <p>
+                            <h:outputText value="#{book.descr}" rendered="#{!searchController.editMode}" />
+                            <h:inputTextarea value="#{book.descr}" rendered="#{searchController.editMode}" />
+                        </p>
+                    </h:column>
+
+                </h:dataTable>
+            </h:form>
+
+            <h:panelGroup id="pages" layout="block">
+                <h:form styleClass="pager_count">
+
+                    <h:selectOneMenu styleClass="books_on_page_dropdown" value="#{searchController.booksOnPage}" valueChangeListener="#{searchController.changeBooksCountOnPage}">
+                        <f:selectItem itemValue="1" />
+                        <f:selectItem itemValue="5" />
+                        <f:selectItem itemValue="10" />
+                        <f:selectItem itemValue="15" />
+                        <f:ajax event="change" execute="@form" render=":booksForm :booksForm:booksList :lettersForm :pages :booksCount" />
+                    </h:selectOneMenu>
+
+                    #{msg.pager}:
+                    <ui:repeat value="#{searchController.pageNumbers}" var="pageNumber" >
+                        <h:commandLink value="#{pageNumber}" action="#{searchController.selectPage()}" styleClass="#{pageNumber == searchController.selectedPageNumber ? 'selected_page' : ''}">
+                            <f:param name="page_number" value="#{pageNumber}" />
+                            <f:ajax event="click" render=":booksForm :booksForm:booksList :lettersForm :pages :booksCount" listener="#{searchController.selectPage()}"/>
+                        </h:commandLink>
+                    </ui:repeat>
+                </h:form>
+            </h:panelGroup>
+
         </ui:define>
 
     </ui:composition>

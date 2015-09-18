@@ -9,33 +9,62 @@
 
 <h:head>
     <title>JavaEE</title>
-    <h:outputStylesheet library="style" name="index.css"  />
+    <h:outputStylesheet library="style" name="index.css" />
 </h:head>
 
-    <h:body>
-        <div id="wrapper">
+<h:body>
+    <div id="wrapper">
 
-            <div class="image">
-                <h:graphicImage library="images" name="JavaDuke.png" />
-            </div>
+        <h:form styleClass="login_form" id="login_form">
 
-            <div class="login_div">
-               <span>#{msg.input_info}</span>
+            <h:graphicImage library="images" name="JavaDuke.png" width="50" height="50" />
 
-                <h:form styleClass="login_form">
-                    <h:inputText id="user" value="#{user.name}" required="true" requiredMessage="#{msg.login_required}">
-                        <f:validator validatorId="ru.company.validator.LoginValidator"/>
-                    </h:inputText>
-                    <h:commandButton action="view/main.xhtml?faces-redirect=true" value="Войти"/>
-                    <p><h:message for="user" styleClass="error"/></p>
-                </h:form>
-            </div>
+            <table align="left" width="350">
+                <tr>
+                    <td></td>
+                    <td>
+                        <span>#{msg.input_info}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>#{msg.login}</td>
+                    <td>
+                        <h:inputText id="user" value="#{user.name}" required="true" requiredMessage="#{msg.login_required}">
+                            <!--<f:validator validatorId="ru.company.validator.LoginValidator" />-->
+                            <!--<f:ajax event="keyup" render="loginError" />-->
+                        </h:inputText>
+                    </td>
+                </tr>
+                <tr>
+                    <td>#{msg.password}</td>
+                    <td>
+                        <h:inputSecret id="password" value="#{user.password}" required="true" redisplay="true" requiredMessage="#{msg.password_required}">
+                            <!--<f:validator validatorId="ru.company.validator.LoginValidator" />-->
+                            <!--<f:ajax event="keyup" render="loginError" />-->
+                        </h:inputSecret>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" align="right">
+                        <h:commandButton action="#{user.login}" value="#{msg.entry}" />
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                       <h:message id="loginError" for="user" styleClass="error" />
+                       <h:message id="loginErrorPass" for="password" styleClass="error" />
+                       <h:message id="loginForm" for="login_form" styleClass="error" />
+                    </td>
+                </tr>
+            </table>
 
-            <div class="footer">
-                #{msg.author_info}
-            </div>
+        </h:form>
 
+        <div class="footer">
+            #{msg.author_info}
         </div>
-    </h:body>
+
+    </div>
+</h:body>
 
 </html>

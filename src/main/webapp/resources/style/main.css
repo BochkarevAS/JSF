@@ -18,6 +18,17 @@ body {
     border: 1px solid black;
 }
 
+.welcome {
+    text-align: right;
+    padding-top: 10px;
+    font-weight: normal;
+}
+
+.welcome a {
+    margin-right: 15px;
+    font-size: 10px;
+}
+
 .logo {
     font-family: sans-serif;
     padding: 0 20px;
@@ -69,3 +80,93 @@ h1, h2, h3, h4, h5, h6, p {
     float: left;
 }
 
+.col1 {
+    vertical-align: top;
+    width: 100px;
+}
+
+.col2 {
+    vertical-align: top;
+    width: 240px;
+}
+
+.col2 a {
+    font-weight: bold;
+    color: #378de5;
+    font-size: 15px;
+}
+
+.col2 a.content_link {
+    color: red;
+    font-size: 11px;
+    text-decoration: underline;
+    margin-left: 5px;
+    font-weight: bold
+}
+
+.col2 a.save_link {
+    color: #3333ff;
+    font-size: 11px;
+    text-decoration: underline;
+    margin-left: 5px;
+    font-weight: bold
+}
+
+.col2 p {
+    font-size: 11px;
+}
+
+.col3 {
+    vertical-align: top;
+    width: 350px;
+}
+
+.letters {
+    height: 20px;
+    margin: 10px;
+    width: 100%;
+    text-align: center;
+}
+
+.letters a {
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: bold;
+    margin: 5px;
+    color: #4d6cd3;
+}
+
+.letters a.selected_letter{
+    color: red;
+}
+
+.genres a.selected_link {
+    color: red;
+}
+
+a.selected_page {
+    color: red;
+}
+
+#book_count {
+    text-align: center;
+}
+
+.pager_count {
+    text-align: center;
+}
+
+.pager_count a {
+    margin-left: 5px;
+    margin-top: 50px;
+}
+
+.locales {
+    width: 100px;
+    text-align: center;
+    margin: auto;
+}
+
+.loc {
+    padding: 5px;
+}
