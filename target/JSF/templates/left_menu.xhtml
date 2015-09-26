@@ -13,11 +13,13 @@
         <h4>#{msg.genres}</h4>
 
         <h:form styleClass="genres" id="genres">
-            <ui:repeat value="#{genreController.genreList}" var="genre">
-                <h:commandLink action="#{searchController.fillBooksByGenre()}" value="#{genre.name}" styleClass="#{genre.id == searchController.selectedGenreId ? 'selected_link' : ''}">
+            <ui:repeat value="#{genreController.allGeanrs}" var="genre">
+
+                <h:commandLink value="#{genre.name}" styleClass="#{genre.id == searchController.selectedGenreId ? 'selected_link' : ''}">
                     <f:param name="genre_id" value="#{genre.id}" />
-                    <f:ajax event="click" render=":booksForm :booksList @form :lettersForm :pages :booksCount" listener="#{searchController.fillBooksByGenre()}" />
+                    <f:ajax event="click" render=":booksForm :booksList @form :lettersForm :pages :booksCount" listener="#{searchController.fillBooksByGenre}"/>
                 </h:commandLink>
+
             </ui:repeat>
         </h:form>
 

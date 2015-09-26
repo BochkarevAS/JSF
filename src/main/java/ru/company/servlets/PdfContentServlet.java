@@ -1,6 +1,6 @@
 package ru.company.servlets;
 
-import ru.company.controller.SearchController;
+import ru.company.db.DataSource;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -31,8 +31,7 @@ public class PdfContentServlet extends HttpServlet {
             Boolean save = Boolean.valueOf(request.getParameter("save"));
             String filename = request.getParameter("filename");
 
-            SearchController searchController = (SearchController) request.getSession(false).getAttribute("searchController");
-            byte[] content = searchController.getContent(id);
+            byte[] content = DataSource.getInstance().getContent(id);
             response.setContentLength(content.length);
             if (save) {
                 response.setHeader("Content-Disposition", "attachment;filename="+ URLEncoder.encode(filename, "UTF-8") + ".pdf");

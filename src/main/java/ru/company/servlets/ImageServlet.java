@@ -7,6 +7,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import ru.company.entity.Book;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -25,9 +26,9 @@ public class ImageServlet extends HttpServlet {
         response.setContentType("image/jpeg");
 
         try (OutputStream out = response.getOutputStream()) {
-            int id = Integer.valueOf(request.getParameter("id"));
-            SearchController searchController = (SearchController)request.getSession(false).getAttribute("searchController");
-            byte[] image = searchController.getImage(id);
+            int index = Integer.valueOf(request.getParameter("index"));
+            SearchController searchController = (SearchController) request.getSession(false).getAttribute("searchController");
+            byte[] image = ((Book) searchController.getPager().getList().get(index)).getImage();
             response.setContentLength(image.length);
             out.write(image);
         } catch (Exception ex) {
