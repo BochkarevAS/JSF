@@ -82,22 +82,11 @@ h1, h2, h3, h4, h5, h6, p {
 
 .col1 {
     vertical-align: top;
-    width: 100px;
-}
-
-.col2 {
-    vertical-align: top;
-    width: 240px;
-}
-
-.col2 a {
-    font-weight: bold;
-    color: #378de5;
-    font-size: 15px;
+    width: 160px;
 }
 
 .col2 a.content_link {
-    color: red;
+    color:red;
     font-size: 11px;
     text-decoration: underline;
     margin-left: 5px;
@@ -112,13 +101,24 @@ h1, h2, h3, h4, h5, h6, p {
     font-weight: bold
 }
 
+.col2 {
+    vertical-align: top;
+    width: 170px;
+}
+
+.col2 a {
+    font-weight: bold;
+    color:#378de5;
+    font-size: 15px;
+}
+
 .col2 p {
     font-size: 11px;
 }
 
-.col3 {
+.col3{
     vertical-align: top;
-    width: 350px;
+    width: 320px;
 }
 
 .letters {
@@ -170,3 +170,31 @@ a.selected_page {
 .loc {
     padding: 5px;
 }
+
+.ui-datatable.books_list .ui-datatable-data tr,
+.ui-datatable.books_list .ui-datatable-data-empty tr,
+.ui-datatable.books_list .ui-datatable-data td,
+.ui-datatable.books_list .ui-datatable-data-empty td {
+    border-style: none;
+    white-space: normal;
+    padding:0;
+    background:none;
+}
+
+.books_list table thead tr {
+    display: none;
+}
+
+.ui-datatable.books_list table{
+    border: none;
+    border-collapse: inherit;
+
+}
+
+
+.edit_book_table{
+    width: 600px;
+    height: 100%;
+
+}
+

@@ -1,30 +1,38 @@
 package ru.company.controller;
 
+import ru.company.comporator.ListComparator;
 import ru.company.db.DataSource;
 import ru.company.entity.Author;
 
+import javax.faces.bean.ApplicationScoped;
+import javax.faces.bean.ManagedBean;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.model.SelectItem;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-public class AuthorController implements Serializable, Converter  {
+@ManagedBean(eager = false)
+@ApplicationScoped
+public class AuthorController implements Serializable, Converter {
 
-    private List<SelectItem> selectItems = new ArrayList<SelectItem>();;
-    private Map<Integer, Author> authorMap;
+    private List<SelectItem> selectItems = new ArrayList<>();
+    private Map<Integer, Author> authorMap = new HashMap<>();
+    private List<Author> authors;
 
     public AuthorController() {
-        authorMap = new HashMap<>();
+        authors = DataSource.getInstance().getAllAuthors();
+        Collections.sort(authors, ListComparator.getInstance());
 
-        for (Author author : DataSource.getInstance().getAllAuthors()) {
+        for (Author author : authors) {
             authorMap.put(author.getId(), author);
             selectItems.add(new SelectItem(author, author.getFio()));
         }
+    }
+
+    public List<Author> getAuthors() {
+        return authors;
     }
 
     public List<SelectItem> getSelectItems() {

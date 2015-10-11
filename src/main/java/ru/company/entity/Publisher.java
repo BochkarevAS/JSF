@@ -5,16 +5,16 @@ import javax.persistence.*;
 @Entity
 @Table(name = "publisher")
 public class Publisher {
-    private long id;
+    private int id;
     private String name;
 
     @Id
     @Column(name = "id")
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -46,5 +46,10 @@ public class Publisher {
         int result = (int) (id ^ (id >>> 32));
         result = 31 * result + (name != null ? name.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

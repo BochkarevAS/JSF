@@ -36,8 +36,14 @@ public class User {
 
     public String login() {
 
+        HttpServletRequest request = ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest());
+
         try {
-            ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).login(name, password);
+
+            if (request.getUserPrincipal() == null || (request.getUserPrincipal() != null && !request.getUserPrincipal().getName().equals(name))) {
+                request.logout();
+                request.login(name, password);
+            }
 
             return "books";
 

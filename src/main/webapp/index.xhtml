@@ -5,66 +5,70 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core">
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
 
-<h:head>
-    <title>JavaEE</title>
-    <h:outputStylesheet library="style" name="index.css" />
-</h:head>
+    <h:head>
+        <title>JavaEE</title>
+    </h:head>
 
-<h:body>
-    <div id="wrapper">
+    <h:body>
 
-        <h:form styleClass="login_form" id="login_form">
+        <f:facet name="last">
+            <h:outputStylesheet library="style" name="index.css"/>
+        </f:facet>
 
-            <h:graphicImage library="images" name="JavaDuke.png" width="50" height="50" />
+        <div class="main">
 
-            <table align="left" width="350">
-                <tr>
-                    <td></td>
-                    <td>
-                        <span>#{msg.input_info}</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>#{msg.login}</td>
-                    <td>
-                        <h:inputText id="user" value="#{user.name}" required="true" requiredMessage="#{msg.login_required}">
-                            <!--<f:validator validatorId="ru.company.validator.LoginValidator" />-->
-                            <!--<f:ajax event="keyup" render="loginError" />-->
-                        </h:inputText>
-                    </td>
-                </tr>
-                <tr>
-                    <td>#{msg.password}</td>
-                    <td>
-                        <h:inputSecret id="password" value="#{user.password}" required="true" redisplay="true" requiredMessage="#{msg.password_required}">
-                            <!--<f:validator validatorId="ru.company.validator.LoginValidator" />-->
-                            <!--<f:ajax event="keyup" render="loginError" />-->
-                        </h:inputSecret>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2" align="right">
-                        <h:commandButton action="#{user.login}" value="#{msg.entry}" />
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                       <h:message id="loginError" for="user" styleClass="error" />
-                       <h:message id="loginErrorPass" for="password" styleClass="error" />
-                       <h:message id="loginForm" for="login_form" styleClass="error" />
-                    </td>
-                </tr>
-            </table>
+            <div class="content">
+                <p class="title"><h:graphicImage library="images" name="JavaDuke.png" width="50" height="50"/></p>
+                <p class="title"><h:outputText id="lib_title" value="#{msg.input_info}"/></p>
+            </div>
 
-        </h:form>
+            <h:panelGroup id="login_div" styleClass="login_div" layout="block">
 
-        <div class="footer">
-            #{msg.author_info}
+                <h:form styleClass="login_form" id="login_form">
+
+                    <p:panelGrid id="grid" columns="3" columnClasses="col1, col2, col3" styleClass="login_grid">
+
+                        <span style="color:red;">*</span> #{msg.login}
+                        <p:inputText id="input_username" value="#{user.name}" required="true" requiredMessage="#{msg.login_required}"/>
+                        <p:message id="usernameReq" for="input_username" showDetail="true" display="text"/>
+
+                        <span style="color:red;">*</span> #{msg.password}
+                        <p:password id="input_password" required="true" requiredMessage="#{msg.password_required}" value="#{user.password}" redisplay="true"/>
+                        <p:message id="passwordReq" for="input_password" showDetail="true" display="text"/>
+
+                        <f:facet name="footer">
+
+                            <p:panelGrid styleClass="login_button_ajax" columns="2" columnClasses="col1, col2">
+
+                                <p:commandButton id="btnLogin" action="#{user.login}" value="#{msg.entry}" styleClass="login_button" update="login_form" onclick="this.disabled=true;" oncomplete="this.disabled=true"/>
+
+                                <p:ajaxStatus id="ajaxStatusPanel">
+                                    <f:facet name="start">
+                                        <h:graphicImage library="images" name="ajax_loading.gif"/>
+                                    </f:facet>
+
+                                    <f:facet name="complete">
+                                        <h:outputText value="" />
+                                    </f:facet>
+                                </p:ajaxStatus>
+
+                            </p:panelGrid>
+
+                        </f:facet>
+
+                    </p:panelGrid>
+
+                    <p:message id="wrongPass" for="login_form" showDetail="true" display="text"/>
+
+                </h:form>
+
+            </h:panelGroup>
+
         </div>
 
-    </div>
-</h:body>
+    </h:body>
 
 </html>

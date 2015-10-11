@@ -5,7 +5,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:f="http://java.sun.com/jsf/core">
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
 
 <ui:composition>
 
@@ -32,17 +33,15 @@
 
         <h:graphicImage library="images" name="poisk.png" styleClass="logo"/>
 
-        <h:inputText id="search_string" styleClass="search_string" value="#{searchController.searchString}" valueChangeListener="#{searchController.searchStringChanged}">
-            <f:ajax  event="change" />
-        </h:inputText>
+        <p:inputText id="search_string" styleClass="search_string" value="#{searchController.searchString}" valueChangeListener="#{searchController.searchStringChanged}">
+            <p:ajax  event="change" global="false"/>
+        </p:inputText>
 
-        <h:commandButton value="#{msg.search}" styleClass="search_button">
-            <f:ajax execute="@form" render=":booksForm :booksList @form :lettersForm :pages :booksCount" listener="#{searchController.fillBooksBySearch()}"/>
-        </h:commandButton>
+        <p:commandButton value="#{msg.search}" styleClass="search_button" actionListener="#{searchController.fillBooksBySearch}" update=":booksForm @form :lettersForm :genresForm :booksCount" />
 
         <h:selectOneMenu value="#{searchController.searchType}" valueChangeListener="#{searchController.searchTypeChanged}">
             <f:selectItems value="${searchTypeController.searchList}"/>
-            <f:ajax event="change"/>
+            <p:ajax event="change" global="false"/>
         </h:selectOneMenu>
 
     </h:form>
@@ -50,10 +49,9 @@
     <h:form styleClass="letters" id="lettersForm">
         <ui:repeat value="#{searchController.russianLetters}" var="letter">
 
-            <h:commandLink value="#{letter}" styleClass="#{letter == searchController.selectedLetter ? 'selected_letter' : ''}">
+            <p:commandLink value="#{letter}" styleClass="#{letter == searchController.selectedLetter ? 'selected_letter' : ''}" actionListener="#{searchController.fillBooksByLetter}" update=":genresForm  :booksForm @form :lettersForm :booksCount">
                 <f:param name="letter" value="#{letter}" />
-                <f:ajax event="click" render=":booksForm :genres :booksList @form :lettersForm :pages :booksCount" listener="#{searchController.fillBooksByLetter()}"/>
-            </h:commandLink>
+            </p:commandLink>
 
         </ui:repeat>
     </h:form>

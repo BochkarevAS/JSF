@@ -6,19 +6,19 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:f="http://java.sun.com/jsf/core">
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
 
     <ui:composition>
 
         <h4>#{msg.genres}</h4>
 
-        <h:form styleClass="genres" id="genres">
+        <h:form styleClass="genres" id="genresForm">
             <ui:repeat value="#{genreController.allGeanrs}" var="genre">
 
-                <h:commandLink value="#{genre.name}" styleClass="#{genre.id == searchController.selectedGenreId ? 'selected_link' : ''}">
+                <p:commandLink value="#{genre.name}" styleClass="#{genre.id == searchController.selectedGenreId ? 'selected_link' : ''}" actionListener="#{searchController.fillBooksByGenre}" update=":booksForm @form :lettersForm :booksCount">
                     <f:param name="genre_id" value="#{genre.id}" />
-                    <f:ajax event="click" render=":booksForm :booksList @form :lettersForm :pages :booksCount" listener="#{searchController.fillBooksByGenre}"/>
-                </h:commandLink>
+                </p:commandLink>
 
             </ui:repeat>
         </h:form>

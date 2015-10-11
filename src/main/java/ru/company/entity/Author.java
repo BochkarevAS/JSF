@@ -6,6 +6,7 @@ import java.sql.Date;
 @Entity
 @Table(name = "author")
 public class Author {
+
     private int id;
     private String fio;
     private Date birthday;
@@ -60,5 +61,10 @@ public class Author {
         result = 31 * result + (fio != null ? fio.hashCode() : 0);
         result = 31 * result + (birthday != null ? birthday.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return fio;
     }
 }

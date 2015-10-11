@@ -6,41 +6,47 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:f="http://java.sun.com/jsf/core">
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
 
 <f:view locale="#{localeChanger.currentLocale}">
     <h:head>
         <title>JavaEE</title>
         <h:outputStylesheet library="style" name="main.css"  />
     </h:head>
-        <h:body>
-            <div id="wrapper">
 
-                <div id="header">
-                    <ui:insert name="header">
-                        <ui:include src="/templates/header.xhtml" />
-                    </ui:insert>
-                </div>
+    <p:ajaxStatus id="ajaxStatusPanel">
 
-                <div id="left_menu">
-                    <ui:insert name="left_menu">
-                        <ui:include src="/templates/left_menu.xhtml" />
-                    </ui:insert>
-                </div>
+    </p:ajaxStatus>
 
-                <div id="content">
-                    <ui:insert name="content">
-                        <ui:include src="/templates/content.xhtml" />
-                    </ui:insert>
-                </div>
+    <h:body>
+        <div id="wrapper">
 
-                <div id="footer">
-                    <ui:insert name="footer">
-                        <ui:include src="/templates/footer.xhtml" />
-                    </ui:insert>
-                </div>
-
+            <div id="header">
+                <ui:insert name="header">
+                    <ui:include src="/templates/header.xhtml" />
+                </ui:insert>
             </div>
-        </h:body>
+
+            <div id="left_menu">
+                <ui:insert name="left_menu">
+                    <ui:include src="/templates/left_menu.xhtml" />
+                </ui:insert>
+            </div>
+
+            <div id="content">
+                <ui:insert name="content">
+                    <ui:include src="/templates/content.xhtml" />
+                </ui:insert>
+            </div>
+
+            <div id="footer">
+                <ui:insert name="footer">
+                    <ui:include src="/templates/footer.xhtml" />
+                </ui:insert>
+            </div>
+
+        </div>
+    </h:body>
 </f:view>
 </html>

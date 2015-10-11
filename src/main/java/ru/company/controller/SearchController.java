@@ -1,10 +1,15 @@
 package ru.company.controller;
 
+import org.primefaces.component.datatable.DataTable;
+import org.primefaces.context.RequestContext;
+import org.primefaces.model.LazyDataModel;
 import ru.company.beans.Pager;
 import ru.company.entity.Book;
 import ru.company.db.DataSource;
 import ru.company.enums.SearchType;
+import ru.company.models.BookListDataModel;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
@@ -21,72 +26,75 @@ public class SearchController implements Serializable {
     private int selectedGenreId;
     private char selectedLetter;
     private String currentSearchString;
-    private Pager<Book> pager = new Pager<>();
+    private Pager pager = Pager.getInstance();
     private SearchType selectedSearchType = SearchType.TITLE;
-    private transient int row = -1;
+    private LazyDataModel<Book> bookListModel;
+    private Book selectedBook;
+    private DataTable dataTable;
 
     public SearchController() {
+        bookListModel = new BookListDataModel();
         fillBooksAll();
     }
 
-    private void submitValues(Character selectedLetter, int selectedPageNumber, int selectedGenreId) {
+    private void submitValues(Character selectedLetter, int selectedGenreId) {
         this.selectedLetter = selectedLetter;
         this.selectedGenreId = selectedGenreId;
-        pager.setSelectedPageNumber(selectedPageNumber);
-    }
-
-    public int getRow() {
-        row++;
-        return row;
     }
 
     public void fillBooksAll() {
-        dataSource.getAllBooks(pager);
+        dataSource.getAllBooks();
     }
 
-    public String fillBooksByGenre() {
-        row = -1;
+    public void fillBooksByGenre() {
+        cancelEdit();
 
         Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
         selectedGenreId = Integer.valueOf(params.get("genre_id"));
 
-        submitValues(' ', 1, selectedGenreId);
-
-        DataSource.getInstance().getBooksByGenre(selectedGenreId, pager);
-
-        return "books";
+        submitValues(' ', selectedGenreId);
+        dataSource.getBooksByGenre(selectedGenreId);
     }
 
-    public String fillBooksByLetter() {
-        row = -1;
+    public void fillBooksByLetter() {
+        cancelEdit();
 
         Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
         selectedLetter = params.get("letter").charAt(0);
 
-        submitValues(selectedLetter, 1, -1);
+        submitValues(selectedLetter, -1);
 
-        DataSource.getInstance().getBooksByLetter(selectedLetter, pager);
+        dataSource.getBooksByLetter(selectedLetter);
 
-        return "books";
     }
 
-    public String fillBooksBySearch() {
-        row = -1;
+    public void fillBooksBySearch() {
+        cancelEdit();
 
-        submitValues(' ', 1, -1);
+        submitValues(' ',  -1);
 
         if (currentSearchString.trim().length() == 0) {
             fillBooksAll();
-            return "books";
         }
 
         if (selectedSearchType == SearchType.AUTHOR) {
-            DataSource.getInstance().getBooksByAuthor(currentSearchString, pager);
+            dataSource.getBooksByAuthor(currentSearchString);
         } else if (selectedSearchType == SearchType.TITLE) {
-            DataSource.getInstance().getBooksByName(currentSearchString, pager);
+            dataSource.getBooksByName(currentSearchString);
         }
+    }
 
-        return "books";
+    private int calcSelectedPage() {
+        int page = dataTable.getPage();
+
+        int leftBound = pager.getTo() * (page - 1);
+        int rightBound = pager.getTo() * page;
+
+        boolean goPrevPage = pager.getTotalBooksCount() > leftBound & pager.getTotalBooksCount() <= rightBound;
+
+        if (goPrevPage) page--;
+
+        return (page > 0) ? page * pager.getTo() : 0;
     }
 
     public Character[] getRussianLetters() {
@@ -102,33 +110,45 @@ public class SearchController implements Serializable {
         selectedSearchType = (SearchType) e.getNewValue();
     }
 
-    public void changeBooksCountOnPage(ValueChangeEvent e) {
-        row = -1;
-        cancelEdit();
-        pager.setBooksCountOnPage(Integer.valueOf(e.getNewValue().toString()).intValue());
-        pager.setSelectedPageNumber(1);
-        DataSource.getInstance().runCurrentCriteria();
+    public void updateBook() {
+
+        dataSource.updateBook(selectedBook);
+        showEdit();
+        dataSource.populateList();
+
+        RequestContext.getCurrentInstance().execute("PF('dlgEditBook').hide();");
+
+        ResourceBundle bundle = ResourceBundle.getBundle("messages.messages", FacesContext.getCurrentInstance().getViewRoot().getLocale());
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(bundle.getString("updated")));
+
+        dataTable.setFirst(calcSelectedPage());
+
     }
 
-    public void selectPage() {
-        row = -1;
-        cancelEdit();
-        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-        pager.setSelectedPageNumber(Integer.valueOf(params.get("page_number")));
-        DataSource.getInstance().runCurrentCriteria();
+    public void deleteBook() {
+        dataSource.deleteBook(selectedBook);
+        dataSource.populateList();
+
+      //  RequestContext.getCurrentInstance().execute("PF('dlgDeleteBook').hide();");
+        ResourceBundle bundle = ResourceBundle.getBundle("messages.messages", FacesContext.getCurrentInstance().getViewRoot().getLocale());
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(bundle.getString("deleted")));
+
+        dataTable.setFirst(calcSelectedPage());
+
     }
 
     public boolean isEditMode() {
         return editMode;
     }
 
-    public void showEdit() {
-        row = -1;
-        editMode = true;
-    }
-
     public void cancelEdit(){
         editMode = false;
+        RequestContext.getCurrentInstance().execute("PF('dlgEditBook').hide();");
+    }
+
+    public void showEdit() {
+        editMode = true;
+        RequestContext.getCurrentInstance().execute("PF('dlgEditBook').show();");
     }
 
     public String getSearchString() {
@@ -163,12 +183,28 @@ public class SearchController implements Serializable {
         this.selectedLetter = selectedLetter;
     }
 
-    public Pager<Book> getPager() {
+    public Pager getPager() {
         return pager;
     }
 
-    public void setPager(Pager<Book> pager) {
-        this.pager = pager;
+    public LazyDataModel<Book> getBookListModel() {
+        return bookListModel;
+    }
+
+    public void setSelectedBook(Book selectedBook) {
+        this.selectedBook = selectedBook;
+    }
+
+    public Book getSelectedBook() {
+        return selectedBook;
+    }
+
+    public DataTable getDataTable() {
+        return dataTable;
+    }
+
+    public void setDataTable(DataTable dataTable) {
+        this.dataTable = dataTable;
     }
 }
 

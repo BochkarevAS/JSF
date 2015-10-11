@@ -1,5 +1,6 @@
 package ru.company.controller;
 
+import ru.company.comporator.ListComparator;
 import ru.company.db.DataSource;
 import ru.company.entity.Genre;
 
@@ -10,10 +11,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.faces.convert.Converter;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @ManagedBean(eager = false)
 @ApplicationScoped
@@ -21,11 +19,11 @@ public class GenreController implements Serializable, Converter {
 
     private List<Genre> allGeanrs;
     private List<SelectItem> selectItems = new ArrayList<>();
-    private Map<Integer, Genre> genreMap;
+    private Map<Integer, Genre> genreMap = new HashMap<>();
 
     public GenreController() {
-        genreMap = new HashMap<>();
-        allGeanrs = DataSource.getInstance().getAllGeanrs();
+        allGeanrs = DataSource.getInstance().getAllGenres();
+        Collections.sort(allGeanrs, ListComparator.getInstance());
 
         for (Genre genre : allGeanrs) {
             genreMap.put(genre.getId(), genre);
