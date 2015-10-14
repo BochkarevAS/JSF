@@ -142,6 +142,10 @@ public class DataSource {
 
     }
 
+    public void addBook(Book book) {
+        getSession().save(book);
+    }
+
     private void prepareCriterias(Criterion criterion) {
         bookListCriteria = DetachedCriteria.forClass(Book.class, "b");
         createAliases(bookListCriteria);
@@ -172,15 +176,25 @@ public class DataSource {
     }
 
     public void updateBook(Book book) {
-        Query query = getSession().createQuery("update Book set name = :name, "
-                + " pageCount = :pageCount, "
-                + " isbn = :isbn, "
-                + " genre = :genre, "
-                + " author = :author, "
-                + " publishYear = :publishYear, "
-                + " publisher = :publisher, "
-                + " descr = :descr "
-                + " where id = :id");
+        StringBuilder queryBuilder = new StringBuilder();
+        queryBuilder.append("update Book ");
+        queryBuilder.append("set name = :name, ");
+        queryBuilder.append("pageCount = :pageCount, ");
+        queryBuilder.append("isbn = :isbn, ");
+        queryBuilder.append("genre = :genre, ");
+        queryBuilder.append("author = :author, ");
+        queryBuilder.append("publishYear = :publishYear, ");
+        queryBuilder.append("publisher = :publisher, ");
+
+
+
+        queryBuilder.append("descr = :descr ");
+
+        queryBuilder.append("where id = :id");
+
+
+        Query query = getSession().createQuery(queryBuilder.toString());
+
 
         query.setParameter("name", book.getName());
         query.setParameter("pageCount", book.getPageCount());
@@ -192,9 +206,8 @@ public class DataSource {
         query.setParameter("descr", book.getDescr());
         query.setParameter("id", book.getId());
 
+
         int result = query.executeUpdate();
-
-
     }
 
     public void deleteBook(Book book) {
@@ -202,6 +215,5 @@ public class DataSource {
         query.setParameter("id", book.getId());
         int result = query.executeUpdate();
     }
-
 
 }

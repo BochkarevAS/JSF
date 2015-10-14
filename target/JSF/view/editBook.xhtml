@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Facelet Title</title>
+</h:head>
+
+<h:body>
+
+    <p:dialog id="editDialog" modal="true" widgetVar="dlgEditBook" dynamic="true" resizable="false" header="#{msg.edit_book}" closable="false" rendered="#{searchController.editMode}">
+
+        <h:form id="formEditBook" rendered="#{searchController.editMode}">
+
+            <div class="popup-info">
+
+                <div class="avatar-box">
+                    <p:graphicImage  value="#{imageController.defaultImage}" width="110" height="150" id="bookImage" rendered="#{searchController.editMode}"/>
+                    <h:form enctype="multipart/form-data" id="formUploadImage" >
+
+
+                        <p:graphicImage value="#{imageController.uploadedImage}" library="images" width="110" height="150" id="bookNewImage"/>
+                        <p:messages id="messagesImage" showDetail="true" for="formUploadImage"/>
+                    </h:form>
+                </div>
+
+                <div class="ava-info">
+                    <div class="block">
+                        <p>#{msg.book_name}</p>
+
+                        <div class="ava-form">
+                            <p:inputText id="inputBookName" value="#{searchController.selectedBook.name}" />
+                        </div>
+                    </div>
+
+                    <div class="block">
+                        <p>#{msg.genre}</p>
+
+                        <div class="ava-form">
+                            <p:selectOneMenu  value="#{searchController.selectedBook.genre}" converter="#{genreController}"  >
+                                <f:selectItems value="${genreController.selectItems}"/>
+                            </p:selectOneMenu>
+                        </div>
+                    </div>
+
+                    <div class="block">
+                        <p>#{msg.author_name}</p>
+
+                        <div class="ava-form">
+                            <p:selectOneMenu value="#{searchController.selectedBook.author}" converter="#{authorController}">
+                                <f:selectItems value="${authorController.selectItems}"/>
+                            </p:selectOneMenu>
+                        </div>
+                    </div>
+
+                    <div class="block">
+                        <p>#{msg.publisher}</p>
+
+                        <div class="ava-form">
+                            <p:selectOneMenu  value="#{searchController.selectedBook.publisher}" converter="#{publisherController}" >
+                                <f:selectItems value="${publisherController.selectItems}"/>
+                            </p:selectOneMenu>
+
+                        </div>
+                    </div>
+
+                    <div class="block">
+                        <p>#{msg.isbn}</p>
+
+                        <div class="ava-form">
+                            <p:inputText id="inputIsbn" value="#{searchController.selectedBook.isbn}" />
+                        </div>
+                    </div>
+
+                    <div class="block">
+                        <p>#{msg.publish_year}</p>
+
+                        <div class="ava-form">
+                            <p:inputMask id="inputPublishYear" value="#{searchController.selectedBook.publishYear}"  maxlength="4" placeHolder="_" mask="9999"/>
+                        </div>
+                    </div>
+
+                    <div class="block">
+                        <p>#{msg.page_count}</p>
+
+                        <div class="ava-form">
+                            <p:inputText id="inputPageCount" value="#{searchController.selectedBook.pageCount}" />
+                        </div>
+                    </div>
+
+
+
+                    <div class="block">
+                        <p>#{msg.text}</p>
+
+                        <div class="ava-form">
+                            <div class="loaded">
+
+
+                                <h:form enctype="multipart/form-data" id="formUploadPdf">
+
+
+
+
+                                    <p:fileUpload  id="pdfUpload" value="" label="#{msg.load_pdf}" fileUploadListener="#{contentController.handleFileUpload}" update="@form" allowTypes="/(\.|\/)(pdf)$/" multiple="false" auto="true" styleClass="pdf-upload"/>
+
+                                    <p:messages id="messages-pdf" showDetail="true" for="formUploadPdf"/>
+                                </h:form>
+
+
+
+
+
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                    <div class="block">
+                        <p>#{msg.descr} <span><h:outputText id="counter" /></span></p>
+
+                        <div class="ava-form">
+                            <p:inputTextarea id="inputDescr" value="#{searchController.selectedBook.descr}" cols="60" rows="20" maxlength="1500" counter="counter" counterTemplate="{0} #{msg.letters_left}" autoResize="false"  />
+
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+                <div class="bottom-info">
+                    <div class="error-div"> <h:messages styleClass="error" id="validationError"/></div>
+
+                    <div class="button-right">
+
+                        <p:commandLink id="saveButton" action="#{searchController.saveBook()}" styleClass="cancel" value="#{msg.save}" onclick="this.disabled=true;" update=":formEditBook :booksForm :booksCount :growlMessage"/>
+
+                        <p:commandLink action="#{searchController.cancelEdit()}"  value="#{msg.cancel}" immediate="true" global="false" styleClass="save"/>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </h:form>
+
+    </p:dialog>
+
+</h:body>
+
+</html>

@@ -37,7 +37,7 @@
             <p:ajax  event="change" global="false"/>
         </p:inputText>
 
-        <p:commandButton value="#{msg.search}" styleClass="search_button" actionListener="#{searchController.fillBooksBySearch}" update=":booksForm @form :lettersForm :genresForm :booksCount" />
+        <p:commandButton value="#{msg.search}" styleClass="search_button" actionListener="#{searchController.fillBooksBySearch}" update=":booksForm:booksList @form :lettersForm :genresForm :booksCount" />
 
         <h:selectOneMenu value="#{searchController.searchType}" valueChangeListener="#{searchController.searchTypeChanged}">
             <f:selectItems value="${searchTypeController.searchList}"/>
@@ -49,7 +49,7 @@
     <h:form styleClass="letters" id="lettersForm">
         <ui:repeat value="#{searchController.russianLetters}" var="letter">
 
-            <p:commandLink value="#{letter}" styleClass="#{letter == searchController.selectedLetter ? 'selected_letter' : ''}" actionListener="#{searchController.fillBooksByLetter}" update=":genresForm  :booksForm @form :lettersForm :booksCount">
+            <p:commandLink value="#{letter}" styleClass="#{letter == searchController.selectedLetter ? 'selected_letter' : ''}" actionListener="#{searchController.fillBooksByLetter}" update=":genresForm  :booksForm @form :lettersForm ">
                 <f:param name="letter" value="#{letter}" />
             </p:commandLink>
 

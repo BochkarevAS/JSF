@@ -16,7 +16,7 @@
         <h:form styleClass="genres" id="genresForm">
             <ui:repeat value="#{genreController.allGeanrs}" var="genre">
 
-                <p:commandLink value="#{genre.name}" styleClass="#{genre.id == searchController.selectedGenreId ? 'selected_link' : ''}" actionListener="#{searchController.fillBooksByGenre}" update=":booksForm @form :lettersForm :booksCount">
+                <p:commandLink value="#{genre.name}" styleClass="#{genre.id == searchController.selectedGenreId ? 'selected_link' : ''}" actionListener="#{searchController.fillBooksByGenre}" update=":genresForm :booksForm :lettersForm :booksCount">
                     <f:param name="genre_id" value="#{genre.id}" />
                 </p:commandLink>
 

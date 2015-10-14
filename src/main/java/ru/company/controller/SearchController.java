@@ -1,5 +1,6 @@
 package ru.company.controller;
 
+import org.primefaces.component.datagrid.DataGrid;
 import org.primefaces.component.datatable.DataTable;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.LazyDataModel;
@@ -13,6 +14,8 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
+import javax.faces.event.ActionListener;
 import javax.faces.event.ValueChangeEvent;
 import java.io.Serializable;
 import java.util.*;
@@ -23,6 +26,7 @@ public class SearchController implements Serializable {
 
     private DataSource dataSource = DataSource.getInstance();
     private boolean editMode;
+    private boolean addMode;
     private int selectedGenreId;
     private char selectedLetter;
     private String currentSearchString;
@@ -30,7 +34,7 @@ public class SearchController implements Serializable {
     private SearchType selectedSearchType = SearchType.TITLE;
     private LazyDataModel<Book> bookListModel;
     private Book selectedBook;
-    private DataTable dataTable;
+    private DataGrid dataTable;
 
     public SearchController() {
         bookListModel = new BookListDataModel();
@@ -151,6 +155,80 @@ public class SearchController implements Serializable {
         RequestContext.getCurrentInstance().execute("PF('dlgEditBook').show();");
     }
 
+    public void saveBook() {
+
+        if (editMode) {
+            dataSource.updateBook(selectedBook);
+        } else if (addMode) {
+            //dataSource.addBook(selectedBook.getBook());
+        }
+
+        //cancelModes();
+        dataSource.populateList();
+
+        ResourceBundle bundle = ResourceBundle.getBundle("messages.messages", FacesContext.getCurrentInstance().getViewRoot().getLocale());
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(bundle.getString("updated")));
+
+        dataTable.setFirst(calcSelectedPage());
+    }
+
+
+    public void switchEditMode() {
+        editMode = true;
+        RequestContext.getCurrentInstance().execute("PF('dlgEditBook').show();");
+
+    }
+
+    public void cancelModes() {
+        if (addMode) {
+            addMode = false;
+        }
+
+        if (editMode) {
+            editMode = false;
+        }
+
+        if (selectedBook != null) {
+            selectedBook.setUploadedContent(null);
+            selectedBook.setUploadedImage(null);
+        }
+
+        RequestContext.getCurrentInstance().execute("PF('dlgEditBook').show();");
+    }
+
+
+
+
+
+
+
+
+
+
+    public ActionListener saveListener() {
+        return new ActionListener() {
+            @Override
+            public void processAction(ActionEvent event) {
+                dataSource.updateBook(selectedBook);
+                cancelEdit();
+                dataSource.populateList();
+
+                ResourceBundle bundle = ResourceBundle.getBundle("messages.messages", FacesContext.getCurrentInstance().getViewRoot().getLocale());
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(bundle.getString("updated")));
+
+                dataTable.setFirst(calcSelectedPage());
+            }
+        };
+    }
+
+    public DataGrid getDataGrid() {
+        return dataTable;
+    }
+
+    public void setDataGrid(DataGrid dataTable) {
+        this.dataTable = dataTable;
+    }
+
     public String getSearchString() {
         return currentSearchString;
     }
@@ -199,13 +277,7 @@ public class SearchController implements Serializable {
         return selectedBook;
     }
 
-    public DataTable getDataTable() {
-        return dataTable;
-    }
 
-    public void setDataTable(DataTable dataTable) {
-        this.dataTable = dataTable;
-    }
 }
 
 

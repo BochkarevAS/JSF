@@ -20,6 +20,9 @@ public class Book {
     private String bookcol;
     private String descr;
 
+    private byte[] uploadedImage;
+    private byte[] uploadedContent;
+
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "publisher_id", nullable = false)
     public Publisher getPublisher() {
@@ -138,6 +141,22 @@ public class Book {
 
     public void setDescr(String descr) {
         this.descr = descr;
+    }
+
+    public byte[] getUploadedContent() {
+        return uploadedContent;
+    }
+
+    public void setUploadedContent(byte[] uploadedContent) {
+        this.uploadedContent = uploadedContent;
+    }
+
+    public byte[] getUploadedImage() {
+        return uploadedImage;
+    }
+
+    public void setUploadedImage(byte[] uploadedImage) {
+        this.uploadedImage = uploadedImage;
     }
 
     @Override
